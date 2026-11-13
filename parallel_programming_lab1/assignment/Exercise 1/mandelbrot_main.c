@@ -64,8 +64,7 @@ double timediff(struct timespec *begin, struct timespec *end)
    return sec + nsec / 1E9;
 }
 
-int
-main(int argc, char ** argv)
+int main(int argc, char ** argv)
 {
   struct mandelbrot_param param;
 
@@ -100,6 +99,11 @@ main(int argc, char ** argv)
 
 #ifdef MEASURE
 printf("Time: %f\n", timediff(&global.start, &global.stop));
+#endif
+
+#if NB_THREADS > HEIGHT
+    fprintf(stderr, "Error: NB_THREADS cannot exceed HEIGHT (%d).\n", HEIGHT);
+    return EXIT_FAILURE;
 #endif
 
   // Final: deallocate structures

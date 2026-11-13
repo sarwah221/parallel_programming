@@ -26,6 +26,10 @@
 #ifndef MANDELBROT_H_
 #define MANDELBROT_H_
 
+#if NB_THREADS > HEIGHT
+#error "NB_THREADS cannot be greater than HEIGHT"
+#endif
+
 struct mandelbrot_param
 {
   int height, width, maxiter;

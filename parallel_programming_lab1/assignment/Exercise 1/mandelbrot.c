@@ -17,6 +17,10 @@
 #define NDEBUG
 #endif
 
+#ifndef MAXDIV
+#define MAXDIV 4.0f
+#endif
+
 #if NB_THREADS > 0
 #include <pthread.h>
 #endif
@@ -70,9 +74,9 @@ static int
 is_in_Mandelbrot(float Cre, float Cim, int maxiter)
 {
 	int iter;
-	float x = 0.0, y = 0.0, xto2 = 0.0, yto2 = 0.0, dist2;
+	float x = 0.0, y = 0.0, xto2 = 0.0, yto2 = 0.0, dist2 = 0.0;
 
-	for (iter = 0; dist2 < 4 && iter <= maxiter; iter++)
+	for (iter = 0; dist2 < MAXDIV && iter <= maxiter; iter++)
 	{
 		y = x * y;
 		y = y + y + Cim;
@@ -355,8 +359,10 @@ init_mandelbrot(struct mandelbrot_param *param)
 		// Check the good behavior or pthread_create; must be disabled while measuring for performance reasons
 #ifdef DEBUG
 		//Start the i-th thread while checking if the operation is correctly performed (via assert)
+		assert(pthread_create(&thread[i], &thread_attr, run_thread, (void*) &thread_data[i]) == 0);	
 #else
 		//Start the i-th thread 
+		pthread_create(&thread[i], &thread_attr, run_thread, (void*) &thread_data[i]);
 #endif
 	}
 
